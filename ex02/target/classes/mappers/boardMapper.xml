@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- MyBatis에서 SQL문을 저장하는 존재를 Mapper라는 용어로 표현한다.
+  		Mapper는 XML과 인터페이스를 이용할 수 있고 현재는 XML을 이용한 작업방법
+  		1. xml로 작성된 Mapper의 위치(저장 경로) 결정
+  		2. xml Mapper 파일을 작성하고 필요한 DTD 추가
+  		3. SQL 작성 
+  		<mapper>의 namespace속성은 클래스의 패키지와 유사한 용도로 MyBatis내에서
+  		원하는 SQL 문을 찾아서 실행할 때 동작
+  		
+  		Mybatis는 preparedStatement를 이용하여 처리하는데 preparedStatement에 들어가는 파라미터를 
+  		사용할 때는 #{}기호를 이용해서 처리함
+  		#{}의 규칙
+  		파라미터가 여러 속성을 가진 경우 #{num}은 getNum() or setNum()을 의미한다.
+  		파라미터가 하나이고 ,기본자료형이거나 문자열인 경우 값이 그대로 전달된다.
+  		파라미터가 Map 타입인 경우 #{num}은 Map 객체의 키값이 'num'인 값을 찾는다.
+  		
+  		id값은 DAO인터페이스와 동일하게 하는것이 좋다.
+   -->
+   
+<mapper namespace="org.zerock.mapper.BoardMapper">
+
+	 <insert id="create">
+	 insert into tbl_board (title, content, writer) 
+	 values(#{title},#{content}, #{writer})
+	 </insert>
+	
+	 <select id="read" resultType="org.zerock.domain.BoardVO">
+	 select 
+	   bno, title, content, writer, regdate, viewcnt 
+	 from 
+	   tbl_board 
+	 where bno = #{bno}
+	 </select>
+	
+	 <update id="update">
+	 update tbl_board set title =#{title}, content =#{content} 
+	 where bno = #{bno}
+	 </update>
+	
+	 <delete id="delete">
+	 delete from tbl_board where bno = #{bno}
+	 </delete>
+	
+	 <select id="listAll" resultType="org.zerock.domain.BoardVO">
+	 <![CDATA[
+	 select 
+	   bno, title, content, writer, regdate, viewcnt 
+	 from 
+	   tbl_board 
+	 where bno > 0 
+	 order by bno desc, regdate desc
+	 ]]>  
+	 </select>
+	 
+	 
+	 <select id="listPage" resultType="BoardVO">
+	 <![CDATA[
+	 select 
+	   bno, title, content, writer, regdate, viewcnt 
+	 from 
+	   tbl_board 
+	 where bno > 0 
+	 order by bno desc, regdate desc
+	 limit #{page}, 10
+	 ]]>  
+	 </select>
+	
+	  <select id="listCriteria" resultType="BoardVO">
+	 <![CDATA[
+	 select 
+	   bno, title, content, writer, regdate, viewcnt 
+	 from 
+	   tbl_board 
+	 where bno > 0 
+	 order by bno desc, regdate desc
+	 limit #{pageStart}, #{perPageNum}
+	 ]]>  
+	 </select>
+	 
+	 <select id="countPaging" resultType="int">
+	 <![CDATA[
+	 select
+	 	count(bno)
+	 from
+	 	tbl_board
+	 where
+	 	bno>0
+	 ]]>
+	 </select>
+	 
+		 <sql id="search">
+	 <if test="searchType != null" > 
+	   <if test="searchType == 't'.toString()">
+	     and title like CONCAT('%', #{keyword}, '%')
+	   </if>
+	   <if test="searchType == 'c'.toString()">
+	     and content like CONCAT('%', #{keyword}, '%')
+	   </if>
+	   <if test="searchType == 'w'.toString()">
+	     and writer like CONCAT('%', #{keyword}, '%')
+	   </if>     
+	   <if test="searchType == 'tc'.toString()">
+	     and ( title like CONCAT('%', #{keyword}, '%') OR content like CONCAT('%', #{keyword}, '%'))
+	   </if>        
+	   <if test="searchType == 'cw'.toString()">
+	     and ( content like CONCAT('%', #{keyword}, '%') OR writer like CONCAT('%', #{keyword}, '%'))
+	   </if>        
+	   <if test="searchType == 'tcw'.toString()">
+	     and (   title like CONCAT('%', #{keyword}, '%') 
+	           OR 
+	             content like CONCAT('%', #{keyword}, '%') 
+	           OR 
+	             writer like CONCAT('%', #{keyword}, '%'))
+	   </if>              
+	 </if>  
+	</sql>
+	 
+	<select id="listSearch" resultType="BoardVO">
+	<![CDATA[  
+	  select * 
+	  from tbl_board 
+	  where bno > 0 
+	]]>  
+	
+	  <include refid="search"></include>
+	  
+	<![CDATA[    
+	  order by bno desc
+	  limit #{pageStart}, #{perPageNum}
+	]]>  
+	</select>
+	  
+	<select id="listSearchCount" resultType="int">
+	<![CDATA[  
+	  select count(bno) 
+	  from tbl_board 
+	  where bno > 0 
+	]]>
+	  <include refid="search"></include>
+ 
+</select>  
+	 
+ 
+</mapper>
