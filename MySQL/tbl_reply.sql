@@ -15,4 +15,5 @@ primary key(rno)
 alter table tbl_reply add constraint fk_board
 foreign key(bno) references tbl_board(bno);
 
+
 select * from tbl_reply ;
