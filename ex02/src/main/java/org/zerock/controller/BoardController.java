@@ -57,11 +57,7 @@ public class BoardController {
 		
 		rttr.addFlashAttribute("msg","success");     
 		return "redirect:/board/listAll";
-		//model.addAttribute("result","success");
-		
-		
-		//return "/board/success";
-		//return "redirect:/board/listAll";
+
 	}
 	@RequestMapping(value="/listAll",method=RequestMethod.GET)
 	public void listAll(Model model)throws Exception{

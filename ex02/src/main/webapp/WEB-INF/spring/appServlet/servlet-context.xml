@@ -20,8 +20,11 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-	
-	<context:component-scan base-package="org.zerock.*" />
+	<!-- 
+		context:component-scan org.zerock.*를 해 놓았더니 aop기능문제 발생 아래와 같이 고침
+		에러가 뜨질 않으니 초기에 설정을 조심해야함 
+	-->
+	<context:component-scan base-package="org.zerock.controller" />
 	
 	
 	

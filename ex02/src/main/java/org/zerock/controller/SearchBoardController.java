@@ -32,18 +32,20 @@ public class SearchBoardController {
 		
 		logger.info(cri.toString());
 		
-		//model.addAttribute("list", service.listCriteria(cri));
+		
 		model.addAttribute("list", service.listSearchCriteria(cri));
 		
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		//pageMaker.setTotalCount(service.listCountCriteria(cri));
+		
 		pageMaker.setTotalCount(service.listSearchCount(cri));
 		
 		model.addAttribute("pageMaker",pageMaker);
 		
 	}
+
+
 	
 	@RequestMapping(value="/readPage", method=RequestMethod.GET)
 	public void read(@RequestParam("bno") int bno,@ModelAttribute("cri") SearchCriteria cri,
@@ -98,11 +100,7 @@ public class SearchBoardController {
 			
 			rttr.addFlashAttribute("msg","success");     
 			return "redirect:/sboard/list";
-			//model.addAttribute("result","success");
-			
-			
-			//return "/board/success";
-			//return "redirect:/board/listAll";
+	
 		}
 
 }
