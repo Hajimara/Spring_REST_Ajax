@@ -19,4 +19,6 @@ public interface ReplyDAO {
 	//페이징처리
 	public int count(Integer bno) throws Exception;
 	//게시물의 댓글 수 
+	public int getBno(Integer bno) throws Exception;
+	
 }

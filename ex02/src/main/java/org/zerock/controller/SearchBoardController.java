@@ -17,7 +17,7 @@ import org.zerock.domain.PageMaker;
 import org.zerock.domain.SearchCriteria;
 import org.zerock.service.BoardService;
 
-@Controller
+@Controller 
 @RequestMapping("/sboard/*")
 public class SearchBoardController {
 
